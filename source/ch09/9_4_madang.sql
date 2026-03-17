@@ -1,0 +1,1 @@
+GRANT SELECT ON madangdb.Book TO mdguest@localhost;

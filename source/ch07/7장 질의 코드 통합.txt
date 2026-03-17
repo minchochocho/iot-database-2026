@@ -1,0 +1,135 @@
+[7-1]
+/* C 강좌 수강료를 조회하면 10,000원으로 나온다 */
+SELECT	price 'C 수강료'
+FROM	Summer 
+WHERE	class LIKE 'C';
+
+/* 200번 학생이 수강신청을 취소하였다. SummerEnroll 테이블에서 삭제한다 */
+SET	SQL_SAFE_UPDATES=0; /* DELETE, UPDATE 연산에 필요한 설정문 */
+DELETE	FROM Summer
+WHERE	sid=200;
+
+/* C 강좌 수강료를 다시 조회하면 조회되지 않는다 */
+SELECT	price 'C 수강료'
+FROM	Summer
+WHERE	class LIKE 'C';
+
+/* 다음 실습을 위해 200번 학생 자료를 다시 입력한다 */
+INSERT INTO	Summer VALUES (200, 'C', 10000);
+
+
+[7-2]
+/* C++ 강좌를 삽입한다 */
+INSERT INTO	Summer VALUES (NULL, 'C++', 25000);
+
+/* Summer 테이블 전체를 조회해 본다 */
+SELECT * FROM	Summer;
+
+/* NULL 값이 있는 경우 질의에 주의한다 - 투플은 5개이지만 수강 학생은 총 4명이다 */
+SELECT	COUNT(*) '수강 인원'
+FROM	Summer;
+
+SELECT	COUNT(sid) '수강 인원'
+FROM	Summer;
+
+SELECT	COUNT(*) '수강 인원'
+FROM	Summer
+WHERE	sid IS NOT NULL;
+
+/* 다음 실습을 위해 C++ 강좌를 삭제한다 */
+DELETE	FROM Summer WHERE class LIKE 'C++';
+
+
+[7-3]
+/* JAVA 강좌 수강료를 수정하면 JAVA 강좌 수강료 전체가 정상적으로 수정된다 */
+UPDATE	Summer
+SET		price=15000
+WHERE	class='JAVA';
+
+SELECT	*
+FROM	Summer;
+
+/* JAVA 강좌를 조회하면 같은 값이 2번 조회되므로 DISTINCT 문을 사용한다 */
+SELECT	DISTINCT price 'JAVA 수강료'
+FROM	Summer
+WHERE	class LIKE 'JAVA';
+
+/* 다음 실습을 위해 JAVA 강좌의 수강료를 다시 20,000원으로 복구한다 */
+UPDATE	Summer
+SET		price=20000
+WHERE	class LIKE 'JAVA';
+
+/* UPDATE 문을 다음과 같이 조건부로 작성하면 데이터 불일치 문제가 발생한다 */
+UPDATE	Summer
+SET		price=15000
+WHERE	class LIKE 'JAVA' AND sid=100;
+
+/* Summer 테이블을 조회해 보면 JAVA 강좌의 수강료가 1건만 수정되었다 */
+SELECT	*
+FROM	Summer;
+
+/* JAVA 수강료를 조회하면 두 건이 나와 데이터 불일치 문제가 발생하였다 */
+SELECT	price 'JAVA 수강료'
+FROM	Summer
+WHERE	class LIKE 'JAVA';
+
+/* 다음 실습을 위해 JAVA 강좌의 수강료를 다시 20,000원으로 복구한다. */
+UPDATE	Summer
+SET		price=20000
+WHERE	class LIKE 'JAVA';
+
+
+[7-4]
+/* C 강좌 수강료를 조회하면 10,000원으로 나온다 */
+SELECT	price 'C 수강료'
+FROM	SummerPrice
+WHERE	class LIKE 'C';
+
+/* 200번 학생이 수강신청을 취소하였다. SummerEnroll 테이블에서 삭제한다 */
+SET SQL_SAFE_UPDATES=0; /* DELETE, UPDATE 연산에 필요한 설정문 */
+DELETE
+FROM	SummerEnroll 
+WHERE	sid=200;
+
+SELECT	*
+FROM	SummerEnroll;
+
+/* C 강좌의 수강료가 존재하는지 확인한다. SummerPrice 테이블에서 조회한다 */
+SELECT	price "C 수강료"
+FROM	SummerPrice
+WHERE	class LIKE 'C';
+
+/* 다음 실습을 위해 200번 학생의 자료를 다시 입력한다 */
+INSERT INTO	SummerEnroll VALUES (200, 'C');
+
+
+[7-5]
+/* C++ 강좌를 삽입한다. SummerPrice 테이블에 NULL 값 없이 입력할 수 있다 */
+INSERT INTO SummerPrice VALUES ('C++', 25000);
+
+SELECT	*
+FROM	SummerPrice;
+
+/* 수강신청 정보를 SummerEnroll 테이블에서 확인한다 */
+SELECT	*
+FROM	SummerEnroll;
+
+/* 다음 실습을 위해 C++ 강좌를 삭제한다 */
+DELETE	FROM SummerPrice WHERE class LIKE 'C++';
+
+
+[7-6]
+/* JAVA 강좌 수강료를 수정한다 */
+UPDATE	SummerPrice
+SET		price=15000
+WHERE	class LIKE 'JAVA';
+
+/* JAVA 강좌 수강료를 조회해 보니 불일치 문제가 없다 */
+SELECT	price 'JAVA 수강료'
+FROM	SummerPrice
+WHERE	class LIKE 'JAVA';
+
+/* 실습 후 JAVA 강좌의 수강료를 다시 20,000원으로 복구한다 */
+UPDATE	SummerPrice
+SET		price=20000
+WHERE	class LIKE 'JAVA';

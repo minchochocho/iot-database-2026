@@ -1,0 +1,218 @@
+[4-1]
+SELECT 	ABS(-78), ABS(+78);
+
+
+[4-2]
+SELECT	ROUND(4.875, 1);
+
+
+[4-3]
+SELECT	custid '고객번호', ROUND(SUM(saleprice)/COUNT(*), -2) '평균금액'
+FROM	Orders
+GROUP BY	custid;
+
+
+
+-- 두 문자열을 연결함
+select CONCAT('마당', ' 서점');
+
+-- 대상 문자열을 모두 소문자로 변환함
+select LOWER('MR. SCOTT');
+
+-- 대상 문자열의 왼쪽부터 지정한 자릿수까지 지정한 문자로 채움
+select  LPAD('Page 1', 10, '*');
+
+-- 대상 문자열의 지정한 문자를 원하는 문자로 변경함
+select  REPLACE('JACK & JUE', 'J', 'BL');
+
+-- 대상 문자열의 오른쪽부터 지정한 자릿수까지 지정한 문자로 채움
+select  RPAD('AbC', 5, '*');
+
+-- 대상 문자열의 지정된 자리에서부터 지정된 길이만큼 잘라서 반환함
+select  SUBSTR('ABCDEFG', 3, 4);
+
+-- 대상 문자열의 양쪽에서 지정된 문자를 삭제함(문자열만 넣으면 기본값으로 공백 제거)
+select  TRIM('=' FROM '==BROWNING==');
+
+-- 대상 문자열을 모두 대문자로 변환함
+select  UPPER('mr. scott');
+
+-- 대상 알파벳 문자의 아스키코드 값을 반환함
+select  ASCII('D') ;
+
+-- 대상 문자열의 byte를 반환함(알파벳은 1byte, 한글은 3byte (UTF-8))
+select  LENGTH('CANDIDE');
+
+-- 문자열의 문자 수를 반환함
+select  CHAR_LENGTH('데이터');
+
+
+[4-4]
+SELECT	bookid, REPLACE(bookname, '야구', '농구') bookname, publisher, 
+		price
+FROM	Book;
+
+
+[4-5]
+SELECT 	bookname '제목', CHAR_LENGTH(bookname) '문자수',	
+		LENGTH(bookname) '바이트수'
+FROM 	Book
+WHERE 	publisher='굿스포츠';
+
+
+[4-6]
+SELECT	SUBSTR(name, 1, 1) '성', COUNT(*) '인원'
+FROM	Customer
+GROUP BY	SUBSTR(name, 1, 1);
+
+
+[4-7]
+SELECT	orderid '주문번호', orderdate '주문일', ADDDATE(orderdate, INTERVAL 10 DAY) '확정'
+FROM	Orders;
+
+
+[4-8]
+SELECT	orderid '주문번호', DATE_FORMAT(orderdate, '%Y-%m-%d') '주문일', custid '고객번호', bookid '도서번호'
+FROM	Orders
+WHERE	orderdate= STR_TO_DATE('20240707', '%Y%m%d');
+
+
+[4-9]
+SELECT SYSDATE(),
+DATE_FORMAT(SYSDATE(), '%Y/%m/%d %a %h:%i') 'SYSDATE_1';
+
+
+[4-10]
+SELECT	name '이름', IFNULL(phone, '연락처없음') '전화번호' 
+FROM	Customer;
+
+
+[4-11]
+SET 	@seq:=0;
+
+SELECT	(@seq:=@seq+1) '순번', custid, name, phone
+FROM	Customer
+WHERE 	@seq < 2;
+
+
+[4-12]
+SELECT orderid, saleprice
+FROM Orders
+WHERE saleprice <= (SELECT AVG(saleprice)
+FROM Orders);
+
+
+[4-13]
+SELECT	orderid, custid, saleprice
+FROM	Orders od1
+WHERE	saleprice> (SELECT AVG(saleprice)
+FROM	Orders od2
+WHERE	od1.custid=od2.custid);
+
+
+[4-14]
+SELECT	SUM(saleprice) 'total'
+FROM	Orders
+WHERE	custid IN (SELECT custid
+FROM	Customer
+WHERE	address LIKE '%대한민국%');
+
+
+[4-15]
+SELECT	orderid, saleprice
+FROM	Orders
+WHERE	saleprice > ALL (SELECT saleprice
+FROM	Orders
+WHERE	custid='3');
+
+
+[4-16]
+SELECT	SUM(saleprice) 'total'
+FROM	Orders od
+WHERE	EXISTS (SELECT *
+		FROM	Customer cs
+		WHERE	address LIKE '%대한민국%' AND cs.custid=od.custid);
+
+
+[4-17]
+SELECT	(SELECT	name
+		FROM	Customer cs
+		WHERE	cs.custid=od.custid) 'name', SUM(saleprice) 'total'
+FROM	Orders od
+GROUP BY	od.custid;
+
+
+[4-18]
+ALTER TABLE Orders ADD bname VARCHAR(40);
+UPDATE	Orders
+SET	bname=(SELECT bookname
+			FROM Book
+			WHERE Book.bookid=Orders.bookid);
+
+
+[4-19]
+SELECT	cs.name, SUM(od.saleprice) 'total'
+FROM	(SELECT custid, name
+		FROM Customer
+		WHERE custid <= 2) cs, Orders od
+WHERE	cs.custid=od.custid
+GROUP BY	cs.name;
+
+
+[4-20]
+CREATE VIEW	vw_Customer
+AS SELECT		*
+	FROM		Customer
+	WHERE		address LIKE '%대한민국%';
+    
+    
+SELECT	*
+FROM	vw_Customer;
+
+
+[4-21]
+CREATE VIEW	vw_Orders (orderid, custid, name, bookid, bookname, saleprice, orderdate)
+AS SELECT	od.orderid, od.custid, cs.name, od.bookid, bk.bookname, od.saleprice, od.orderdate
+	FROM	Orders od, Customer cs, Book bk
+	WHERE	od.custid=cs.custid AND od.bookid=bk.bookid;
+    
+
+SELECT	orderid, bookname, saleprice
+FROM	vw_Orders
+WHERE	name ='김연아';
+
+
+[4-22]
+CREATE OR REPLACE VIEW vw_Customer (custid, name, address)
+AS  SELECT		custid, name, address
+	FROM		Customer
+	WHERE		address LIKE '%영국%';
+
+SELECT	*
+FROM	vw_Customer;
+
+
+[4-23]
+DROP VIEW	vw_Customer;
+
+SELECT	*
+FROM	vw_Customer;
+
+
+[4-24]
+CREATE INDEX ix_Book ON Book(bookname);
+
+
+[4-25]
+CREATE INDEX ix_Book2 ON Book(publisher, price);
+
+show index from book;
+
+
+[4-26]
+ANALYZE TABLE Book;
+
+
+[4-27]
+DROP INDEX ix_Book ON Book;
+

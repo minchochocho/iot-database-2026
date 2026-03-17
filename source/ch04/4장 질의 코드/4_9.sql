@@ -1,0 +1,2 @@
+SELECT SYSDATE(),
+DATE_FORMAT(SYSDATE(), '%Y/%m/%d %a %h:%i') 'SYSDATE_1';

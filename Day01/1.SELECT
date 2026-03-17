@@ -1,0 +1,5 @@
+-- 일반 조회 쿼리
+SELECT * FROM Book;
+
+-- 1. 김연아 고객의 전화를 찾으시오
+select * from Book;
