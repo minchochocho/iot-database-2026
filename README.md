@@ -462,10 +462,12 @@
     - https://www.mysqltutorial.org/getting-started-with-mysql/mysql-sample-database/
     - https://dev.mysql.com/doc/index-other.html?ref=dbwriter.io
 
-- Sakira-db - MySQL 버전충돌로 현재 사용불가
+- `Sakira`(영화 대여DB) - [쿼리](./ref/sakila-schema-safe.sql)
+    - Data - [쿼리](./ref/sakila-data.sql)
 
 ### DML 추가
 
+- [쿼리](./day04/1.INSERT추가.sql)
 - INSERT INTO 대량 삽입 - MySQL 방법
     ```sql
     INSERT INTO 테이블명 VALUES (컬럼1값, 컬럼2값, ..., 컬럼 N값),
@@ -474,6 +476,9 @@
     ...
     (컬럼1값, 컬럼2값, ..., 컬럼 N값),;
     ````
+- SELECT TOP 3
+    - 전체 조회 수 중에서 조건에 맞는 데이터 3개만 조회
+
 
 ### DDL 계속
 
@@ -485,7 +490,7 @@
 
 #### CREATE 계속
 
-- CREATE 구문
+- CREATE 구문 - [쿼리](./day04/2.CREATE.sql)
     - PRIMARY KEY (컬럼1 또는 여러개)
     - FOREIGN KEY (custid) REFERENCES NewCustomer(custid) ON DELETE CASCADE
         - REFERENCES : 참조하는 부모테이블과 PK컬럼
@@ -499,7 +504,7 @@
 
 #### ALTER
 
-- ALTER
+- ALTER- [쿼리](./day04/3.ALTER.sql)
     - 객체 수정. 테이블 외에서는 많이 사용안됨
 
     ```sql
@@ -513,7 +518,7 @@
 
 #### DROP
 
-- DROP
+- DROP 
     - 객체 삭제
     - 테이블에서는 관계를 맺고있는 자식테이블 먼저 삭제 후 부모테이블 삭제 가능
 
@@ -522,4 +527,47 @@
     ```
 
 ### 내장함수
+
+- C, C++ 내장함수와 동일 - [쿼리](./day04/4.내장함수.sql)
+
+### NULL
+
+- 아직 지정되지 않은 값 - [쿼리](./day04/5.NULL.sql)
+- '0', '', ' ' 과 다름
+- C, C++의 `\0`과 동일한 의미
+- 비교연산 불가(`=`, `>`, `<`, `>=`, `<=`) 대신 `Is`, `IS NOT`만 사용가능
+- NULL값을 연산하면 결과도 NULL이 됨
+    - NULL + 숫자 => NULL
+    - 집계함수 계산 시 NULL이 포함된 행은 집계에서 빠짐(!)
+
+### 쿼리연습
+- [쿼리](./day04/7.sakila_practice.sql)
+
+![sakila_erd](./sakila.png)
+
+## 5일차
+
+### 뷰
+
+### 인덱스
+
+### 트랜잭션, 동시성제어
+
+- TCL
+
+### 보안 및 관리
+
+#### 사용자
+
+- DDL 일부
+
+#### 권한
+
+- DCL
+
+### MySQL 프로그래밍
+
+### DB연동 C/C++ 프로그래밍
+
+### 데이터베이스 모델링
 

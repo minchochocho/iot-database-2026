@@ -4,4 +4,9 @@ INSERT INTO Book VALUES
 (32, '100년 쓰는 완벽 허리','한즈미디어', 19800),
 (33, '60일 영어 습관','시원스쿨닷컴', 18900);
 
-
+-- SELECT TOP3 추가
+-- LIMIT는 MySQL 문법, SQL표준이 XX
+SELECT *
+  FROM Orders
+ ORDER BY saleprice DESC
+ LIMIT 3;
