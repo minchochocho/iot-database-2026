@@ -190,13 +190,13 @@
     - 데이터베이스에서 데이터를 조작하고, 테이블과 같은 객체를 컨트롤하는 등의 작업을 수행하는 프로그래밍 언어
 
 - SQL 종류
-    - DML(Data Manipulation Language) - 데이터 조작어.
+    - **DML(Data Manipulation Language)** - 데이터 조작어.
     > `SELECT`, `INSERT`, `UPDATE`, `DELETE`와 같은 데이터를 조작하는 언어
-    - DDL(Data Definition Language) - 데이터 정의어.
+    - **DDL(Data Definition Language)** - 데이터 정의어.
     > `CREATE`, `ALTER`, `RENAME`, `DROP` 같은 객체(데이터베이스, 테이블, 사용자, 뷰, 인덱스,...)를 처리하는 언어
-    - DCL(Data Control Language) - 데이터 제어어.
+    - **DCL(Data Control Language)** - 데이터 제어어.
     > `GRANT`, `REVOKE` 와 같아 사용자에게 권한을 주고 해제하는 기능을 처리하는 언어
-    -TCL(Transaction Control Language) - 트랜잭션 제어어
+    - **TCL(Transaction Control Language)** - 트랜잭션 제어어
     > `BEGIN TRAN`, `COMMIT`, `ROLLBACK` 같은 트랜잭션 처리로 동시성 제어를 위한 언어
 
 ### SELECT 실습
@@ -325,29 +325,201 @@
         - LEFT OUTER JOIN - 두 개의 테이블 중 앞쪽 테이블을 기준
         - RIGHT OUTER JOIN - 두 개의 테이블 중 뒤쪽 테이블 기준
 
-#### 서브쿼리(부속질의) - [쿼리](./Day02/4_SUBQUERY.sql)
+#### 서브쿼리(부속질의)
 
-- SubQuery - 쿼리 내부에 포함되는 하위쿼리. 항상 소괄호 () 내에 작성
+- SubQuery - 쿼리 내부에 포함되는 하위쿼리. 항상 소괄호 () 내에 작성 - [쿼리](./Day02/4_SUBQUERY.sql)
     - 서브쿼리는 소괄호 안의 쿼리부터 먼저 작성
     - 메인쿼리 - 소괄호 밖의 쿼리
     - 서브쿼리 - 소괄호 안의 쿼리
+    - 대부분이 조인으로 변경 가능
+    - 조인이 가지고 있는 성능개선의 특징을 사용할 수 없기에 속도저하가 발생할 가능성이 높음
+    - 조인을 많이 사용한다면, 서브쿼리는 필요할때만 사용
 
 ## 3일차
 
 ### SELECT 실습
 
+- DB 기본타입 - 문자열, 숫자, 날짜시간
+![alt text](image-14.png)
 #### 서브쿼리 계속
 
-- 서브쿼리 종류
-    - 조건절 서브쿼리
-    - 
+- 서브쿼리 종류(쓰이는 위치에 따라) - [쿼리](./day03/1.SUBQUERY.sql)
+    - WHERE절 서브쿼리
+    - FROM절 서브쿼리
+    - SELECT절 서브쿼리
 
 #### 집합연산
 
-### DML 기타
+- 두 테이블 합치기 - [쿼리](./day03/2.UNION.sql)
+    - UNION, UNION ALL
+
+
+#### GROUP BY 추가 기능
+
+- GROUP BY 컬럼 WITH ROLLUP - 전체 합산 추출 - [쿼리](./day03/3.ROOLUP.sql)
+    - ROLLUP을 안쓰면 쿼리가 아주 길어짐
+
+
+### DML 기타 - [쿼리](./day03/4.DML기타.sql)
+
+- DML 중에서 직접적인 트랜잭션 영향을 받지 않는 것은 SELECT 뿐이다
 
 #### INSERT
+- 테이블에 데이터를 삽입하는 쿼리
+- 트랜잭션의 영향을 받음
+
+    ```sql
+    INSERT INTO 테이블명 (컬럼1, ... 컬럼N)
+    VALUES (컬럼1값, ..., 컬럼N값);
+    ```
+
+- UPDATE나 DELETE와 달리 큰 문제가 발생하지 않음
+- 잘못 입력되면 지우면 됨
 
 #### UPDATE
+- 테이블에 존재하는 데이터를 수정하는 쿼리
+- 트랜잭션의 영향을 받음
+- 업데이트는 매우 신중하게
+
+    ```sql
+    UPDATE 테이블명
+       SET 변경컬럼1 = 변경값1 
+         , 변경컬럼2 = 변경값2
+         , ...
+         , 변경컬럼N = 변경값N
+     WHERE 구분컬럼 = 구분값
+    ```
 
 #### DELETE
+- 테이블에 존재하는 데이터를 삭제하는 쿼리
+- 트랜잭션의 영향을 받음
+- 삭제시 매우 신중하게
+
+    ```sql
+    DELETE FROM 테이블명
+     WHERE 구분컬럼 = 구분값
+    ```
+
+#### 트랜잭션 처리
+
+- UPDATE, DELETE, (INSERT포함) 처리오류가 발생하면 복구할 수 있는 기능 존재
+- 8장에서 다룰 예정
+
+
+### DDL - [쿼리](./day03/5.DDL.sql)
+
+- 객체 생성하고 수정, 삭제하는 기능을 하는 SQL 언어
+
+#### MySQL 데이터타입
+- `BOOL` - true/false
+- TINYINT, SMALLINT - 1byte(255개), 2byte
+    - `TINTINT(1)`
+- `INT` - 4byte
+- `BIGINT` - 8byte
+- FLOAT - 4byte, 소수점
+- DOUBLE - 8byte, 예전에 많이 사용
+- `DECIMAL(m, n)` - m(전체 65자리수), n(소수점 최대 30 자리수), 정수가 35자리, 소수점 30자리인 아주 큰 수
+- DATE - 날짜만
+- `DATETYPE` - 날짜와 시간 모두
+- CHAR(n) - 고정길이 문자열 n만큼 길이 지정
+    - CHAR(10)에 Hello를 입력하면 'Hello     '로 저장
+    - 나머지 5자리 스페이스로 채움
+    - ed) 주민번호, 공통코드처럼 정확한 길이 입력이 필요할 때
+- VARCHAR - 가변길이 문자열 n만큼 길이 지정
+    - VARCHAR(10)는 'Hello'로 저장. 나머지 5자리는 없앰
+    - 길이를 넘어서는 문자열은 입력되지 않음(잘림)
+    - char, varchar는 길이를 여유있게 설정
+- `TEXT`, LONGTEXT - 아주 긴 문자열, 2~4GB
+- `BLOB` - 바이너리로 저장되는 큰 데이터, 2 ~ 4GB
+
+#### CREATE
+
+- DB객체를 생성하는 쿼리
+- 데이터베이스, 테이블, 뷰, 인덱스 등 주요 객체를 생성가능
+
+    ```sql
+    -- 테이블생성
+    CREATE TABLE 테이블명 (
+        컬럼1이름 데이터타입 제약조건, 
+        컬럼2이름 데이터타입 제약조건, 
+        ...
+        컬럼3이름 데이터타입 제약조건, 
+        [각 제약조건을 독립적으로 작성]
+    );
+    -- 데이터베이스생성
+    CREATE DATABASE 데이터베이스명;
+    -- 사용자 생성
+    CREATE USER 사용자명 IDENTIFIED BY 비번;
+    -- ...
+    ```
+
+## 4일차 
+
+### MySQL 샘플DB
+
+- 샘플DB
+    - https://github.com/datacharmer/test_db
+    - https://www.mysqltutorial.org/getting-started-with-mysql/mysql-sample-database/
+    - https://dev.mysql.com/doc/index-other.html?ref=dbwriter.io
+
+- Sakira-db - MySQL 버전충돌로 현재 사용불가
+
+### DML 추가
+
+- INSERT INTO 대량 삽입 - MySQL 방법
+    ```sql
+    INSERT INTO 테이블명 VALUES (컬럼1값, 컬럼2값, ..., 컬럼 N값),
+    (컬럼1값, 컬럼2값, ..., 컬럼 N값),
+    (컬럼1값, 컬럼2값, ..., 컬럼 N값),
+    ...
+    (컬럼1값, 컬럼2값, ..., 컬럼 N값),;
+    ````
+
+### DDL 계속
+
+#### 제약조건 개요
+
+- 데이터베이스에 정확한 데이터가 들어갈 수 있도록, 테이블 각 컬럼별 입력가능한 데이터를 지정하는 것
+- 무결성을 벗어나는 데이터는 못들어가도록 제약을 주는 것
+- 종류 : `기본키(Primary Key)`, 단일(Unique), 널허용여부(Null), 체크(Check), 기본값(Default), `외래키(Foriegn key)`
+
+#### CREATE 계속
+
+- CREATE 구문
+    - PRIMARY KEY (컬럼1 또는 여러개)
+    - FOREIGN KEY (custid) REFERENCES NewCustomer(custid) ON DELETE CASCADE
+        - REFERENCES : 참조하는 부모테이블과 PK컬럼
+        - ON DELETE CASCADE : 무결성 유지를 위해서 부모테이블의 해당 PK데이터를 삭제하면 자식테이블의 관련 FK데이터도 같이 삭제하는 옵션
+        - ON DELETE SET NULL : 부모테이블의 PK값이 삭제되면 자식테이블의 FK값은 NULL로 변경
+        - ON UPDATE CASCADE | SET NULL : 수정할 때도 삭제시와 유사한 처리 가능. 수정도 가능하지만 PK수정이 거의 없기에 많이 사용되지 않음
+
+- AUTO_INCREMENT : 테이블에 데이터를 삽입할 때 숫자타입 PK의 값을 자동 증가시켜서 만들어주는 기능
+    - PK 컬럼은 INSERT 문에서 생략 
+
+
+#### ALTER
+
+- ALTER
+    - 객체 수정. 테이블 외에서는 많이 사용안됨
+
+    ```sql
+    ALTER TABLE 테이블명
+        [ADD 속성명 데이터타입]
+        [DROP COLUMN 컬럼명]
+        [MODIFY 속성명 [NULL | NOT NULL]]
+        [ADD PRIMARY KEY(컬럼명)]
+        [[ADD | DROP] 제약조건명]
+    ```
+
+#### DROP
+
+- DROP
+    - 객체 삭제
+    - 테이블에서는 관계를 맺고있는 자식테이블 먼저 삭제 후 부모테이블 삭제 가능
+
+    ```sql
+    DROP 객체 객체명
+    ```
+
+### 내장함수
+
