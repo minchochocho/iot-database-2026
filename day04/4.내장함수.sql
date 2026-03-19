@@ -69,7 +69,7 @@ SELECT adddate(now(),INTERVAL 10 DAY),
 	   date(now()), time(now());
 
 -- 날짜 간 날짜차이수
-SELECT datediff('2026-03-19','2026-03-08');\
+SELECT datediff('2026-03-19','2026-03-08');
 
 -- 현재 일시
 SELECT sysdate(), now();
