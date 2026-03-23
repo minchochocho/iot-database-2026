@@ -15,6 +15,8 @@
 *.userprefs
 
 # Mono auto generated files
+# 리눅스에서 visual studio로 작업할 때 생기는 파일들
+# 지금은 따로 쓰이지 않음
 mono_crash.*
 
 # Build results

@@ -7,7 +7,7 @@
 
 - **데이터**(Data) : 단순한 수치가 값
 - **정보**(Information) :데이터에 의미를 부여한 것
-- 지식(Knowlege) : 정보를 통한 사물이나 현상에 대한 이해
+- 지식(Knowledge) : 정보를 통한 사물이나 현상에 대한 이해
 
 ### 데이터베이스 DataBase
 
@@ -178,7 +178,7 @@
 
 #### 데이터베이스 종류
 - 관계형 데이터베이스
-    - Oracle(가장 비쌈), SQL Server(MS), MySQL(Oracle), MariaDB, PostgreSQL(오픈소스)
+    - Oracle(가장 비쌈), SQL Server(MS), `MySQL`(Oracle), MariaDB, PostgreSQL(오픈소스)
 - NoSQL 데이터베이스
     - MongoDB, Redis, Apache Cassandra, ...
 - In-memory 데이터베이스
@@ -197,7 +197,7 @@
     - **DCL(Data Control Language)** - 데이터 제어어.
     > `GRANT`, `REVOKE` 와 같아 사용자에게 권한을 주고 해제하는 기능을 처리하는 언어
     - **TCL(Transaction Control Language)** - 트랜잭션 제어어
-    > `BEGIN TRAN`, `COMMIT`, `ROLLBACK` 같은 트랜잭션 처리로 동시성 제어를 위한 언어
+    > `START TRANSACTION`, `COMMIT`, `ROLLBACK`, SAVE POINT 같은 트랜잭션 처리로 동시성 제어를 위한 언어
 
 ### SELECT 실습
 
@@ -216,21 +216,21 @@
       FROM 테이블명;
 
     -- 컬럼(열) 명시할 때, 열 순서를 바꿔서 조회할 때
-    SELECT 열1, 열2, ... 열n
+    SELECT 컬럼1, 컬럼2, ... 컬럼n
       FROM 테이블명;
 
     -- 조건 필터링(필요한 행, 레코드)만 조회할 때
-    SELECT *|열이름 나열
+    SELECT *|컬럼명 나열
       FROM 테이블명
      WHERE 조건...;
 
     -- 정렬하고 싶을때
     -- ASCending(오름차순) | DESCending(내림차순)
     -- ASC는 기본이므로 생략 가능
-    SELECT *|열이름 나열
+    SELECT *|컬럼명 나열
       FROM 테이블명
      WHERE 조건...;
-     ORDER BY 열1, 열2 ASC|DESC;
+     ORDER BY 컬럼1, 컬럼2 ASC|DESC;
 
 
     ```
@@ -339,7 +339,7 @@
 
 ### SELECT 실습
 
-- DB 기본타입 - 문자열, 숫자, 날짜시간
+- DB 기본타입 - 문자열, 숫자, 날짜시간만 고려하면 됨
 ![alt text](image-14.png)
 #### 서브쿼리 계속
 
@@ -351,8 +351,8 @@
 #### 집합연산
 
 - 두 테이블 합치기 - [쿼리](./day03/2.UNION.sql)
-    - UNION, UNION ALL
-
+    - UNION
+    - UNION ALL
 
 #### GROUP BY 추가 기능
 
@@ -406,7 +406,10 @@
 - 8장에서 다룰 예정
 
 
-### DDL - [쿼리](./day03/5.DDL.sql)
+### DDL
+
+- DDL - [쿼리](./day03/5.DDL.sql)
+    - DataDefinition Language
 
 - 객체 생성하고 수정, 삭제하는 기능을 하는 SQL 언어
 
@@ -599,7 +602,7 @@
     - 인덱스를 생성한다고 무조건 속도가 빨라지는 것은 아님. 제대로 걸어야 함
     - WHERE절에 자주 사용되는 컬럼에 인덱스를 걸어야 함.(PK에 자동 인덱스 생성)
     - JOIN에 사용되는 FK에도 인덱스를 걸면 속도 개선
-    - 단일 테이블에 인덱스를 너무 많이 걸면 반대로 속도가 느려짐
+    - 단일 테이블에 인덱스를 너무 많이 걸면 반대로 속도가 느려짐(테이블당 4개정도의 인덱스 권장)
     - 인덱스마다 ASC나 DESC로 정렬을 해야하기 때문에 부가적인 처리가 많아짐
     - 자주 변경, 삭제되는 컬럼에 인덱스를 걸지 말 것
     - 중복이 많이 되거나 NULL이 많은 컬럼은 인덱스효과 미비
@@ -646,7 +649,7 @@
     4. 2번만 실행되고 1번이 실패하면, 돈이 복사됨(X)
 
 - 트랜잭션 4가지 특징(ACID)
-    - 원자성(Atomicity) : 전부 성공 OR 전부 실패(All or Nothing), 중간상태 없음
+    - 원자성(Atomicity) : 전부 성공 OR 전부 실패(`All or Nothing`), 중간상태 없음
     - 일관성(Consistency) : 처리 전후로 데이터 규칙이 유지됨, 전체 합은 변경없음
     - 격리성(Isolation) : 여러 사람이 동시에 처리해도 서로 영향이 없음, 고립성이라고도함
     - 지속성(Durability) : 성공한 처리는 절대 사라지지 않음
@@ -809,17 +812,134 @@
 - 함수  - [쿼리1](./day06/5.함수원형.sql), [쿼리2](./day06/5.FUNCTION.sql)
     - 내장함수에 없는 기능의 함수를 추가로 개발하는 것
     - 함수 파라미터, 리턴값이 존재
+    - 일반 쿼리문에 포함가능
+
+## 7일차
+
+### MySQL 프로그래밍
 
 #### 저장 프로시저
 
+- 저장 프로시저 - [쿼리1](./day07/1.PROCEDURE_원본.sql), [쿼리2](./day07/1.PROCEDURE_실행.sql)
+    - 함수와 달리 리턴값이 없음, 단 OUT 파라미터로 결과를 돌려받을 순 있음
+    - 일반 쿼리문에 포함불가
+    - 단독 실행 또는 스케줄에 따라 배치 실행
+    - 사용자가 없는 새벽에 `대량처리` 수행시 사용
+
+- 생성
+    - DBeaver 해당 DB Procedure 폴더에서 마우스 오른쪽 버튼 > Create New Procedure
+    - Name, 필요한 함수명 입력
+    - Type, PROCEDURE 선택
+
+    ![alt text](image-23.png)
+
+    - 작성 후 Save 클릭
+
+InsertOrUpdateBook << 어떨때 업데이트를 하고 어떨때 insert를 하는지알기에는 좋은 구문
+구성 방식은 별로
+
+#### 커서
+- Cursor - 저장 프로시저 쿼리 참조
+    - 마우스 커서와 동일하게 테이블의 한 위치를 가리키는 객체
+    - 테이블의 데이터를 한 행씩 처리하기위해서 사용
+    - CURSOR, OPEN, FETCH, CLOSE
+    - 일반 프로그래밍 언어와 연동 시 사용
 
 #### 트리거
 
+- Trigger - [쿼리1](./day07/2.TRIGGER_실행.sql), [쿼리2](./day07/2.TRIGGER_원형.sql)
+    - 방아쇠를 뜻함. 하나의 테이블에서 INSERT, UPDATE, DELETE 문이 실행되면 다른 테이블이나 다른 처리가 자동으로 실행되는 저장 프로그램 중 하나
+    - Before Trigger보다 After Trigger가 많이 사용
 
-### DB연동 C/C++ 프로그래밍
+    ![alt text](image-24.png)
+
+### C/C++ 프로그래밍
+
+- 개발방법
+    - MySQL 8.0이상 추천
+    - MySQL Connector/C++ 라이브러리 설치
+    - Visual Studio 프로젝트 생성
+    - C++ 코드 작성
+
+#### MySQK Connector/C++ 라이브러리
+
+- https://dev.mysql.com/downloads/connector/cpp/
+    - windows (x86, 64-bit), MSI Install 
+    - C:\Program Files\MySQL\MySQL Connector C++ 9.6\ 에 설치됨
+
+- 시스템 속성
+    - 고급 > 환경 변수 > path에 MySQL 관련 dll이 위치하는 경로 추가
+    - VS나 콘솔 재시작
+    ![alt text](image-25.png)
+
+#### Visual Studio 프로젝트 속성
+
+- 프로젝트 속성 (부모 기본값 상속 체크 필수)
+    - C/C++ > 일반 > 추가 포함 디렉토리
+        - C:\Program Files\MySQL\MySQL Connector C++ 9.6\include 추가
+    - 링커 > 일반 > 추가 라이브러리 디렉토리
+        - C:\Program Files\MySQL\MySQL Connector C++ 9.6\lib64\vs14 추가
+    - 링커 > 입력 > 추가 종속성
+        - mysqlcppconn.lib
+
+#### 텔넷 클라이언트 설정
+
+- 시작 > appwiz.cpl 실행
+    - Windows 기능 켜기/끄기 클릭
+    - Telnet Client 체크 활성화
+    - powershell이나 콘솔
 
 ### 데이터베이스 모델링
+
+#### 모델링
+
+- 개요
+    - 현실세계에 존재하는 시스템을 컴퓨터으로 변환하기 위한 디자인
+    - 현실세계의 데이터를 DB상에 입력하여 프로그램에서 사용할 수 있도록 설계
+    - 예. 오프라인 매장 -> 온라인 매장, 시립 도서관 -> 온라인 시립 도서관, 백화점 -> 모바일 백화점
+
+- 데이터베이스 생명주기
+    - `요구사항 수집 및 분석` > `설계` > `구현` > 운영 > 감시 및 개선
+
+- SW 생명주기
+    - DB 생명주기 설계와 구현이 SW생명주기 설계에 속함
+    - `요구사항 수집 및 분석` > `설계` > 구현 > 테스트 > 배포 > 유지보수/관리
+
+- DB 설계의 순서
+    1. 개념 모델링 : 요구사항에 따른 개념적인 모델링으로, 추상적인 도형으로 관계 구성
+        전체적인 뼈대를 만드는 과정
+        - 각 테이블이 될 `엔티티` 추출
+        - 테이블의 컬럼이 될 속성 추출
+        - 속성 구분자가 될 키 추출
+
+    2. `논리 모델링` : 개념 모델링 바탕으로 속성, 키, 관계 명확히 정의
+        - 개념 모델링에서 나오지 않았던 상세 속성들 추출, PK, FK
+        - 데이터 중복을 최소화하는 `정규화` 수행
+        - 관계형 데이터모델 테이블화, 구체화
+
+    3. `물리 모델링`
+        - 실제 DB 종류(Oracle, `MySQL`, SQL Server)를 고려해서 설계
+        - 테이블, 컬럼, 인덱스, 제약조건, 뷰 등 객체 및 PK, FK, NULL등 제약조건 생성
+        - 성능을 위해 정규화된 내용을 다시 `반정규화` 진행
+        - 최종 스키마 완성
+        - 실제 데이터베이스화(내보내기 가능)
+
+- 최근에는 개념모델링은 잘 하지 않음
+- <> 관계 ㅁ 엔티티
+
+
+## 8일차
+
+### 데이터베이스 모델링
+
+#### ERD
+
+- Entity Relationship Diagram
+    - 
 
 #### ERD 작성
 
 - 정규화, 반정규화, 개념/논리/물리다이어그램
+
+### 언어
+C, C++, Python, C#, SQL, `Javascript, HTML, CSS`, RaspPi, Arduino, IoT, 통신
