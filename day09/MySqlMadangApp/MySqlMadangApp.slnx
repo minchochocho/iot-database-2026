@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="MySqlMadangApp.vcxproj" Id="d05e739e-8cd2-462d-b9d4-6bd738f73b36" />
+</Solution>
